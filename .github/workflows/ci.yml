@@ -18,9 +18,6 @@ jobs:
           role-to-assume: arn:aws:iam::843987575744:role/github-actions-cloud-project
           aws-region: eu-west-2
 
-      - name: Login to Amazon ECR
-        uses: aws-actions/amazon-ecr-login@v2
-
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -34,3 +31,11 @@ jobs:
 
       - name: Test application
         run: python -m py_compile app/app.py
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build Docker image
+        run: docker build --platform linux/amd64 -t my-cloud-app:latest ./app
+
+
