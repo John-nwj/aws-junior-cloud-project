@@ -42,3 +42,16 @@ jobs:
         run: |
           docker tag my-cloud-app:latest 843987575744.dkr.ecr.eu-west-2.amazonaws.com/my-cloud-app:latest
           docker push 843987575744.dkr.ecr.eu-west-2.amazonaws.com/my-cloud-app:latest
+
+      - name: Deploy to EC2
+        run: |
+          aws ssm send-command \
+            --instance-ids i-0c95479e4cd3bc45d \
+            --document-name "AWS-RunShellScript" \
+            --parameters 'commands=[
+              "docker pull 843987575744.dkr.ecr.eu-west-2.amazonaws.com/my-cloud-app:latest",
+              "docker stop my-cloud-app || true",
+              "docker rm my-cloud-app || true",
+              "docker run -d --name my-cloud-app -p 80:5000 --restart unless-stopped 843987575744.dkr.ecr.eu-west-2.amazonaws.com/my-cloud-app:latest"
+            ]' \
+            --region eu-west-2
