@@ -38,4 +38,7 @@ jobs:
       - name: Build Docker image
         run: docker build --platform linux/amd64 -t my-cloud-app:latest ./app
 
-
+      - name: Push Docker image
+        run: |
+          docker tag my-cloud-app:latest 843987575744.dkr.ecr.eu-west-2.amazonaws.com/my-cloud-app:latest
+          docker push 843987575744.dkr.ecr.eu-west-2.amazonaws.com/my-cloud-app:latest
